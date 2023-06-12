@@ -1,0 +1,30 @@
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: 428px;
+}
+.breed-select {
+  max-width: 428px;
+}
+.cat-info {
+  display: flex;
+  gap: 20px;
+  padding-top: 10px;
+}
+.cat-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 768px;
+}
+
+.invisible {
+  display: none;
+}
