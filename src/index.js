@@ -6,7 +6,6 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 let page = 1;
 let querry = "";
-let cardHeight = 288;
 const refs = {
     form: document.querySelector('#search-form'),
     gallery: document.querySelector('.gallery'),
@@ -14,26 +13,27 @@ const refs = {
 }
 const gallerySLb = new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: "250" });
 
-window.scrollBy({
-        top: cardHeight * 2,
-        behavior: "smooth"
-    });
 refs.form.addEventListener("submit", onSubmit);
 refs.btnLoadMore.addEventListener("click", fetchImages);
+refs.wnd.addEventListener("scroll",onScroll);
 
 function onSubmit(event) {
-  event.preventDefault();
+    event.preventDefault();
+     refs.btnLoadMore.classList.add("invisible"); 
   const inputValue = refs.form.elements.searchQuery.value.trim();
 
     if (inputValue === "") return Notiflix.Notify.failure("Empty query!");
     querry = inputValue;
     clearImgList();
-    refs.btnLoadMore.classList.remove("invisible");
+   
   page = 1;
   
-  fetchImages()
+  fetchImages().then((hits)=> Notiflix.Notify.success(`Hooray! We found ${hits} images.`))
     .catch(onError)
-    .finally(() => refs.form.reset());
+      .finally(() => {
+          refs.form.reset();
+      });
+     
 }
     
 
@@ -41,17 +41,21 @@ async function fetchImages() {
 
     refs.btnLoadMore.disable = true;
   try {
-     const data = await getImages(querry, page);
-      if (!data.hits.length) throw new Error("Data not found");
+      const data = await getImages(querry, page);
+       refs.btnLoadMore.classList.remove("invisible");
+      if (!data.hits.length) throw new Error("Sorry, there are no images matching your search query. Please try again.");
       page += 1;
-      const maxPage = Math.ceil(data.totalHits / 40);
-      if (page > maxPage) refs.btnLoadMore.classList.add("invisible");
-     const markup = await data.hits.reduce(
+      const markup = await data.hits.reduce(
             (markup, currentEl) => markup + createGalleryItem(currentEl), "");
         if (markup === undefined) throw new Error("No data!");
       refs.gallery.insertAdjacentHTML("beforeend", markup);
       gallerySLb.refresh();
-    //   const { height: cardHeight } = refs.gallery.firstElementChild.getBoundingClientRect();
+      const maxPage = Math.ceil(data.totalHits / 40);
+      if (page > maxPage) {
+          refs.btnLoadMore.classList.add("invisible");
+          Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+      }
+      return data.totalHits;
      
   } catch (err) {
     onError(err);
@@ -94,5 +98,6 @@ function clearImgList() {
 }
 
 function onError(error) {
+    refs.btnLoadMore.classList.add("invisible"); 
     Notiflix.Notify.failure(error.message);
 }
