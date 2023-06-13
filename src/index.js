@@ -28,7 +28,7 @@ function onSubmit(event) {
    
   page = 1;
   
-  fetchImages().then((hits)=> Notiflix.Notify.success(`Hooray! We found ${hits} images.`))
+    fetchImages().then((hits) => { if (hits) Notiflix.Notify.success(`Hooray! We found ${hits} images.`) })
     .catch(onError)
       .finally(() => {
           refs.form.reset();
