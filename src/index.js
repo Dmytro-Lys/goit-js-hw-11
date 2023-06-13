@@ -15,7 +15,6 @@ const gallerySLb = new SimpleLightbox('.gallery a', { captionsData: "alt", capti
 
 refs.form.addEventListener("submit", onSubmit);
 refs.btnLoadMore.addEventListener("click", fetchImages);
-refs.wnd.addEventListener("scroll",onScroll);
 
 function onSubmit(event) {
     event.preventDefault();
