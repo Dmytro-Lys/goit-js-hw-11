@@ -7,13 +7,19 @@
     <link rel="stylesheet" href="css/common.css" />
   </head>
   <body>
-    <select class="breed-select"></select>
-    <p class="loader invisible">Loading data, please wait...</p>
-    <p class="error invisible">
-      Oops! Something went wrong! Try reloading the page!
-    </p>
-    <div class="cat-info"></div>
-
+    <div class="for-form">
+      <form class="search-form" id="search-form">
+        <input
+          type="text"
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button type="submit" class="submit-button"></button>
+      </form>
+    </div>
+    <div class="gallery"></div>
+    <button type="button" class="load-more invisible">Load more</button>
     <script src="index.js" type="module"></script>
   </body>
 </html>
