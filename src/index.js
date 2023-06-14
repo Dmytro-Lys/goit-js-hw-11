@@ -23,7 +23,7 @@ const gallerySLb = new SimpleLightbox('.gallery a', { captionsData: "alt", capti
 
 refs.form.addEventListener("submit", onSubmit);
 refs.btnLoadMore.addEventListener("click", fetchImages);
-window.addEventListener("scroll", _.debounce(onScroll, 300))
+window.addEventListener("scroll", _.debounce(onScroll, 200))
 
 function onSubmit(event) {
     event.preventDefault();
@@ -109,7 +109,7 @@ function onError(error) {
      moveScroll += 1;
      scrollAnimate(elemHeight * moveScroll)
    }
-  if ((bodyHeight - scrollPosition) < 650) {
+  if ((bodyHeight - scrollPosition) < 700) {
     if (page <= maxPage) {
       fetchImages()
     } else {
