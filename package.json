@@ -21,6 +21,8 @@
     "@vimeo/player": "^2.19.0",
     "axios": "^1.4.0",
     "flatpickr": "^4.6.13",
+    "jquery": "^3.7.0",
+    "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "modern-normalize": "^1.1.0",
     "notiflix": "^3.2.6",

@@ -3,11 +3,16 @@ import Notiflix from 'notiflix';
 import "notiflix/src/notiflix.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import $ from 'jquery';
+import _ from 'lodash';
 
 let page = 1;
 let querry = "";
 let maxPage = 0;
 let bodyHeight = 0;
+const elemHeight = 560;
+let moveScroll = 0;
+let runScroll = false;
 const refs = {
     form: document.querySelector('#search-form'),
     gallery: document.querySelector('.gallery'),
@@ -18,7 +23,7 @@ const gallerySLb = new SimpleLightbox('.gallery a', { captionsData: "alt", capti
 
 refs.form.addEventListener("submit", onSubmit);
 refs.btnLoadMore.addEventListener("click", fetchImages);
-window.addEventListener("scroll", onScroll);
+window.addEventListener("scroll", _.debounce(onScroll, 300))
 
 function onSubmit(event) {
     event.preventDefault();
@@ -27,6 +32,7 @@ function onSubmit(event) {
     querry = inputValue;
     clearImgList();
     page = 1;
+    moveScroll = 0;
     fetchImages().then((hits) => {
       if (hits) {
         Notiflix.Notify.success(`Hooray! We found ${hits} images.`)
@@ -96,8 +102,13 @@ function onError(error) {
     Notiflix.Notify.failure(error.message);
 }
 
-function onScroll() {
-  const scrollPosition = Math.ceil(window.scrollY);
+ function onScroll() {
+
+    const scrollPosition = Math.ceil(window.scrollY);
+   if (scrollPosition > elemHeight * moveScroll) {
+     moveScroll += 1;
+     scrollAnimate(elemHeight * moveScroll)
+   }
   if ((bodyHeight - scrollPosition) < 650) {
     if (page <= maxPage) {
       fetchImages()
@@ -105,4 +116,14 @@ function onScroll() {
        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
     };
   }
+}
+
+function scrollAnimate(position) {
+  $('html, body').animate(
+      {
+        scrollTop: position,
+      },
+      //duration
+      700,
+    );
 }
